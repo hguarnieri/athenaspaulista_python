@@ -1,0 +1,19 @@
+TR's
+  2 - Title
+  3 - Time to go
+  4 - Addresses to go
+  5 - Time to go back
+  6 - Address to go back
+
+Erro na linha: 11 -- Nao tem
+Erro na linha: 34 -- Titulo sem espaco
+Erro na linha: 44 -- Titulo diferente
+Erro na linha: 52 -- Titulo diferente
+Erro na linha: 58 -- Titulo diferente
+
+Dois pontos:
+SELECT * FROM athenas.enderecos
+LEFT JOIN athenas.linhas ON linha = numero
+ where UPPER(endereco) like '%UFSCAR%' and linha in (SELECT distinct linha FROM athenas.enderecos
+LEFT JOIN athenas.linhas ON linha = numero
+ where UPPER(endereco) like '%IWAGIRO%')
