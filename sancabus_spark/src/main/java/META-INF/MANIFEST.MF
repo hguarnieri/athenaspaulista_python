@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Class-Path: jetty-server-9.3.2.v20150730.jar gson-2.6.2.jar websocket-
+ api-9.3.2.v20150730.jar javax.servlet-api-3.1.0.jar HikariCP-2.4.5.ja
+ r spark-core-2.3.jar jetty-security-9.3.2.v20150730.jar websocket-com
+ mon-9.3.2.v20150730.jar websocket-client-9.3.2.v20150730.jar jetty-ut
+ il-9.3.2.v20150730.jar websocket-servlet-9.3.2.v20150730.jar jetty-we
+ bapp-9.3.2.v20150730.jar slf4j-api-1.7.12.jar jetty-http-9.3.2.v20150
+ 730.jar slf4j-simple-1.7.12.jar jetty-servlet-9.3.2.v20150730.jar web
+ socket-server-9.3.2.v20150730.jar jetty-io-9.3.2.v20150730.jar jetty-
+ xml-9.3.2.v20150730.jar mysql-connector-java-5.1.38.jar
+Main-Class: Main
+
