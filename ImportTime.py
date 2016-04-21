@@ -37,11 +37,11 @@ def parseTimes(data):
 
     return times
 
-for numero in range(1, 2):
+for numero in range(53, 54):
 
     numeroLinha = str(numero).zfill(2)
     url = 'http://www.athenaspaulista.com.br/LINHAS/Linha' + numeroLinha + '.htm'
-    
+
     # Correcoes
     whereToSplit = [2, 4, 6]
     if numero == 44 or numero == 52:

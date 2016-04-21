@@ -1,0 +1,12 @@
+<table style="width: 100%;">
+  <tr>
+    <th>Número</th>
+    <th>Linha</th>
+    <th>Visualizar</th>
+  </tr>
+  <tr ng-repeat="linha in linhas">
+    <td>{{ linha.numero }}</td>
+    <td>{{ linha.nome }}</td>
+    <td><a href="#linha/{{ linha.numero }}" >Visualizar</a></td>
+  </tr>
+</table>
