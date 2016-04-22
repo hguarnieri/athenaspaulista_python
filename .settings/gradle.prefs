@@ -1,0 +1,12 @@
+{
+  "1.0": {
+    "project_path": ":",
+    "project_dir": "/home/victor/workspace/Sancabus",
+    "connection_project_dir": "/home/victor/workspace/Sancabus",
+    "connection_gradle_user_home": null,
+    "connection_gradle_distribution": "GRADLE_DISTRIBUTION(WRAPPER)",
+    "connection_java_home": "/home/victor/jdk1.8.0_66",
+    "connection_jvm_arguments": "",
+    "connection_arguments": ""
+  }
+}
