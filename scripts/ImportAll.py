@@ -3,6 +3,7 @@
 
 import re
 import urllib2
+from pymongo import MongoClient
 
 # Functions
 def remove_tags(replaceS, data):
@@ -41,7 +42,7 @@ def parseTimes(data):
 
 	return times
 
-def readLinha(html, numero):
+def readLinha(html, numero, title, url):
 	whereToSplit = [2, 3, 5]
 	if numero == 44 or numero == 52:
 		whereToSplit = [2, 3, 4]
@@ -144,7 +145,9 @@ def readTimes(html, numero):
 		print e
 
 excludes = [18, 23, 27, 38, 39, 40, 45, 51, 54, 55]
-for numero in range(1, 2):
+
+linhas = []
+for numero in range(1, 70):
 
 	numeroLinha = str(numero).zfill(2)
 	url = 'http://www.athenaspaulista.com.br/LINHAS/Linha' + numeroLinha + '.htm'
@@ -163,15 +166,22 @@ for numero in range(1, 2):
 
 		print str(numero) + ": " + title + "\n"
 
-		linha = readLinha(html, numero)
+		linha = readLinha(html, numero, title, url)
 		linha["addresses"] = readAddresses(html, numero)
 
 		if numero not in excludes:
 			linha["times"] = readTimes(html, numero)
 
+		linhas.append(linha)
 	except urllib2.HTTPError as err:
 		if err.code == 404:
 			print "Linha " + numeroLinha + " nao encontrada."
 	except Exception as err:
 		print "Erro na linha: " + numeroLinha
 		print err
+
+client = MongoClient()
+db = client.sancabus
+db.routes.delete_many({})
+db.routes.insert_many(linhas)
+print db.routes.count()
