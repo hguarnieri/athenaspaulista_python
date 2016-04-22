@@ -41,7 +41,11 @@ def parseTimes(data):
 
 	return times
 
-def readLinha(html, numero, whereToSplit):
+def readLinha(html, numero):
+	whereToSplit = [2, 3, 5]
+	if numero == 44 or numero == 52:
+		whereToSplit = [2, 3, 4]
+
 	unclearedTimeToGo = html.split('<tr style=\'mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes\'>')[whereToSplit[1]].split("</p>")[0]
 	timeToGo = remove_tags('', unclearedTimeToGo).strip()
 
@@ -56,9 +60,13 @@ def readLinha(html, numero, whereToSplit):
 	if len(timeToGoBack) < 7:
 		timeToGoBack = '-'
 
-	return [numero, title, url, timeToGo, timeToGoBack]
+	return { "number": numero, "title": title, "url": url, "timeToGo": timeToGo, "timeToGoBack": timeToGoBack }
 
-def readAddresses(html, numero, whereToSplit):	
+def readAddresses(html, numero):
+	whereToSplit = [2, 4, 6]
+	if numero == 44 or numero == 52:
+		whereToSplit = [2, 3, 4]
+
 	divider = ";"
 	if numero == 60:
 		divider = ","
@@ -75,7 +83,7 @@ def readAddresses(html, numero, whereToSplit):
 		if address[-1] == '.':
 			address = address[-1:]
 		if len(address) > 3:
-			addresses.append([ordem, 1, address.strip()])
+			addresses.append({ "order": ordem, "type": 1, "address": address.strip() })
 			ordem += 1
 
 	try:
@@ -91,10 +99,12 @@ def readAddresses(html, numero, whereToSplit):
 			if address[-1] == '.':
 				address = address[-1:]
 			if len(address) > 3:
-				addresses.append([ordem, 2, address.strip()])
+				addresses.append({ "order": ordem, "type": 2, "address": address.strip() })
 				ordem += 1
 	except Exception as e:
 		print e
+
+	return addresses
 
 def readTimes(html, numero):
 	try:		
@@ -103,13 +113,12 @@ def readTimes(html, numero):
 			util = "DIA ÚTEIS"
 		clearHtml = remove_tags('<tag>', html).strip()
 
-		f = open("./times/" + str(numero) + ".txt", "w+")
+		times = {}
  
 		if numero == 52:
-			holiday = clearHtml.split("FERIADOS")
-			f.write(str(parseTimes(holiday[1])))
-			f.write('\n\n')
-			sundays = holiday[0].split("DOMINGOS")
+			holidays = clearHtml.split("FERIADOS")
+			times["holidays"] = parseTimes(holidays[1])
+			sundays = holidays[0].split("DOMINGOS")
 		else:
 			sundays = clearHtml.split("DOMINGOS E FERIADOS") # [1]
 
@@ -126,26 +135,21 @@ def readTimes(html, numero):
 
 		allDays = saturdays[0].split(util) # [1]
 		
-		f.write(str(parseTimes(allDays[1])))
-		f.write('\n\n')
-		f.write(str(parseTimes(saturdays[1])))
-		f.write('\n\n')
-		f.write(str(parseTimes(sundays[1])))
-		f.close()
+		times["sundays"] = parseTimes(sundays[1])
+		times["saturdays"] = parseTimes(saturdays[1])
+		times["days"] = parseTimes(allDays[1])
+
+		return times
 	except Exception as e:
 		print e
 
 excludes = [18, 23, 27, 38, 39, 40, 45, 51, 54, 55]
-for numero in range(1, 70):
+for numero in range(1, 2):
 
 	numeroLinha = str(numero).zfill(2)
 	url = 'http://www.athenaspaulista.com.br/LINHAS/Linha' + numeroLinha + '.htm'
 
 	# Correcoes
-	whereToSplit = [2, 4, 6]
-	if numero == 44 or numero == 52:
-		whereToSplit = [2, 3, 4]
-
 	whereToSplitTitle = "-"
 	if numero == 58 or numero == 41:
 		whereToSplitTitle = "\xe2\x80\x93"
@@ -154,16 +158,16 @@ for numero in range(1, 70):
 		response = urllib2.urlopen(url)
 		html = response.read().decode('windows-1252').encode('utf-8').replace("&nbsp;", "").replace('\r\n', '').replace("	", "").replace("  ", " ").replace("\xc2\xa0", "")
 
-		unclearedTitle = html.split('<tr style=\'mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes\'>')[whereToSplit[0]].split("</tr>")[0]
+		unclearedTitle = html.split('<tr style=\'mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes\'>')[2].split("</tr>")[0]
 		title = remove_tags('', unclearedTitle).split(whereToSplitTitle, 1)[1].strip()
 
 		print str(numero) + ": " + title + "\n"
 
-		readLinha(html, numero, whereToSplit)
-		readAddresses(html, numero, whereToSplit)
+		linha = readLinha(html, numero)
+		linha["addresses"] = readAddresses(html, numero)
 
 		if numero not in excludes:
-			readTimes(html, numero)
+			linha["times"] = readTimes(html, numero)
 
 	except urllib2.HTTPError as err:
 		if err.code == 404:
