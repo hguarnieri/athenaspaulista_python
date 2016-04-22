@@ -78,13 +78,14 @@ def readAddresses(html, numero):
 		unclearedAddressesToGo = unclearedAddressesToGo.split(")", 1)[1]
 	addressesToGo = remove_tags('', unclearedAddressesToGo).strip()
 	
-	addresses = []
+	addressesGo = []
+	addressesGoBack = []
 	ordem = 0
 	for address in addressesToGo.split(divider):
 		if address[-1] == '.':
 			address = address[-1:]
 		if len(address) > 3:
-			addresses.append({ "order": ordem, "type": 1, "address": address.strip() })
+			addressesGo.append({ "order": ordem, "address": address.strip() })
 			ordem += 1
 
 	try:
@@ -100,12 +101,12 @@ def readAddresses(html, numero):
 			if address[-1] == '.':
 				address = address[-1:]
 			if len(address) > 3:
-				addresses.append({ "order": ordem, "type": 2, "address": address.strip() })
+				addressesGoBack.append({ "order": ordem, "address": address.strip() })
 				ordem += 1
 	except Exception as e:
 		print e
 
-	return addresses
+	return addressesGo, addressesGoBack
 
 def readTimes(html, numero):
 	try:		
@@ -167,7 +168,10 @@ for numero in range(1, 70):
 		print str(numero) + ": " + title + "\n"
 
 		linha = readLinha(html, numero, title, url)
-		linha["addresses"] = readAddresses(html, numero)
+		addr = readAddresses(html, numero)
+
+		linha["addressesToGo"] = addr[0]
+		linha["addressesToGoBack"] = addr[1]
 
 		if numero not in excludes:
 			linha["times"] = readTimes(html, numero)

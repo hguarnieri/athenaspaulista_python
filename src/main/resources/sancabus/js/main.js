@@ -74,11 +74,11 @@ app.controller("LinhasController", function($scope, $http) {
     var localChegada = $scope.input.chegada;
 
     if ((typeof localSaida === "undefined") || (localSaida == "")) {
-      localSaida = "all";
+      localSaida = "";
     }
 
     if ((typeof localChegada === "undefined") || (localChegada == "")) {
-      localChegada = "all";
+      localChegada = "";
     }
 
     localSaida = $scope.removerAcentos(localSaida);
@@ -87,6 +87,7 @@ app.controller("LinhasController", function($scope, $http) {
     $http.get('/linhas/' + localSaida + "/" + localChegada).
       success(function(data, status, headers, config) {
         $scope.linhas = data;
+        console.log(data);
 
         if (data == "") {
           alert("Não foram encontradas rotas entre os endereços.");

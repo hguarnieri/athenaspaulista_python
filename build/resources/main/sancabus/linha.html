@@ -1,0 +1,13 @@
+<div style="width: 100%; display:inline-block;">
+  <a href="#" class="btn orange" ng-click="back()">Voltar</a>
+  <span style="font-size: 16px; font-weight: bold">{{linha.numero}} - {{linha.nome}}</span><br/>
+  <span style="font-size: 14px;">{{linha.horarioIda}}<br/>{{linha.horarioVolta}}</span><br/><br/>
+  Caminho de ida:<br/>
+  <ul>
+    <li ng-repeat="endereco in linha.enderecosIda"><a href="http://maps.google.com/?q={{endereco.endereco}}, Sao Carlos - SP&z=23" target="_blank">{{endereco.endereco}}</a></li>
+  </ul>
+  Caminho de volta:<br/>
+  <ul>
+    <li ng-repeat="endereco in linha.enderecosVolta"><a href="http://maps.google.com/?q={{endereco.endereco}}, Sao Carlos - SP&z=23" target="_blank">{{endereco.endereco}}</a></li>
+  </ul>
+</div>
